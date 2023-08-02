@@ -7,7 +7,7 @@ contract StorageFactory{
     SimpleStorage[] public simpleStorageArray;  //This array holds the contract objects
 
     function createSimpleStorageContract() public {
-        SimpleStorage simpleStorage = new SimpleStorage();
+        SimpleStorage simpleStorage = new SimpleStorage();  //creates new contract object
         simpleStorageArray.push(simpleStorage);
     }
 
