@@ -25,13 +25,46 @@ contract FundMe{
         // Now minUsd is in terms of USD but msg.value is in eth, so how do we do the conversion?
         // Here is where blockchain orcales come into play 
 
-        funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value;
+        funders.push(msg.sender);   //msg.sender is the address of whoever calls the fund function
+        addressToAmountFunded[msg.sender] += msg.value;
     }
 
     
-    //When calling the above function it takes two calls since the chainlink oracle is also returning the requested value
-    //The above fn uses the version function which is part of aggv3 contract outside of our working space
+    
+    function withdraw() public {
+        /* starting index, ending index, step amount */
+        for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++)
+        {
+            address funder = funders[funderIndex];
+            addressToAmountFunded[funder]=0;    //resetted all the amounts of the funders to zero
+        }
 
-    //function withdraw(){}
+        //resetting the array
+        funders = new address[](0);  
+
+        
+        //actually withdraw the funds
+
+
+        //transfer(automatically reverts if the transaction has failed)
+        payable(msg.sender).transfer(address(this).balance);
+        //This keyword refers to this entire contract
+        /* 
+        msg.sender = address
+        payable(msg.sender) = payable address
+        In solitidy in order to send native blockchain token, you can only work with payable addresses
+        */
+
+
+        //send(in order to revert we need to include require statement)
+        bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        require(sendSuccess,"Send failed!");
+
+        //call
+        (bool callSuccess,)=payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess,"Call failed!");
+
+    }
+
+
 }
