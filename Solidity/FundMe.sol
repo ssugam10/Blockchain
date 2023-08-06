@@ -14,7 +14,7 @@ contract FundMe{
 
     address public owner;
 
-    constructor(){
+    constructor(){     //gets executed as soon as the contract gets deployed! 
         owner = msg.sender;
     }
 
