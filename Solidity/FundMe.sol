@@ -12,6 +12,13 @@ contract FundMe{
     mapping(address => uint256) public addressToAmountFunded;
 
 
+    address public owner;
+
+    constructor(){
+        owner = msg.sender;
+    }
+
+
     function fund() public payable {
         //Want to be able to set a minimum fund amount in USD
 
@@ -31,7 +38,8 @@ contract FundMe{
 
     
     
-    function withdraw() public {
+    function withdraw() public onlyOwner {
+        //Ensures that withdraw function is only called by the owner
         /* starting index, ending index, step amount */
         for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++)
         {
@@ -53,17 +61,23 @@ contract FundMe{
         msg.sender = address
         payable(msg.sender) = payable address
         In solitidy in order to send native blockchain token, you can only work with payable addresses
+        Transfer automatically reverts if the transaction has failed
         */
 
 
         //send(in order to revert we need to include require statement)
         bool sendSuccess = payable(msg.sender).send(address(this).balance);
         require(sendSuccess,"Send failed!");
+        //send reverts only if you add require statement as above
 
         //call
         (bool callSuccess,)=payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess,"Call failed!");
+    }
 
+    modifier onlyOwner {
+        require(msg.sender == owner, "Sender is not owner!");
+        _;  //represent executing the rest of the code  
     }
 
 
