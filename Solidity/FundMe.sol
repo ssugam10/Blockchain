@@ -6,7 +6,7 @@ import "./PriceConverter.sol";
 
 error NotOwner();
 contract FundMe{
-    using PriceConverter for uint256;
+    using PriceConverter for uint256;   //This line allows us to use library ke functions with dot for 1st parameter(uint256)
 
     uint256 public constant MINIMUM_USD = 50 * 1e18; //we want the value in terms of USD, not eth
     //variables set only once, later not changed can be used with the constant keyword
@@ -20,11 +20,12 @@ contract FundMe{
     //Such variables can be declared with the immutable keyword
 
     constructor(){     //gets executed as soon as the contract gets deployed! 
-        i_owner = msg.sender;
+        i_owner = msg.sender;   /*msg.sender is a global var that represents the address of the acc (or smart contract)
+        that initiated the current function call or txn */
     }
 
 
-    function fund() public payable {
+    function fund() public payable {    //Payable enables the function to receive ETH 
         //Want to be able to set a minimum fund amount in USD
 
         require(msg.value.getConversionRate() >= MINIMUM_USD, "Didn't send enough!");  // 1e18 = 1*10**18
@@ -39,6 +40,7 @@ contract FundMe{
 
         funders.push(msg.sender);   //msg.sender is the address of whoever calls the fund function
         addressToAmountFunded[msg.sender] += msg.value;
+        /* msg.value is a global variable that represents amt of ETH sent in a txn, it holds the value in wei */
     }
 
     
@@ -85,6 +87,7 @@ contract FundMe{
         if(msg.sender != i_owner){ revert NotOwner();}
         _;  //represent executing the rest of the code  
     }
+    /* modifiers are reusable piece of codes that can be applied to functions to modify their behaviour */
 
 
     //What happens if someone send ETH in this contract without calling the fund function!!!
