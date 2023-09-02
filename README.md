@@ -1,7 +1,6 @@
 # Blockchain
-This repository contains few smart contracts in solidity along with javascript codes for learning basics of blockchain
+This repository contains few smart contracts in solidity 
 
 Each code file has adequate amount of comments to understand the code 
 
-1. The javascript folder contains codes related to basic understanding of javascript such as forming objects, triple equality and getter function along with many other concepts.
-2.
+1. The solidity folder contains basic smart contracts which can be deployed on testnets, these contracts refresh the basics of solidity as well as contain advanced transaction functions which gather real-time    data from chainlink oracle.
